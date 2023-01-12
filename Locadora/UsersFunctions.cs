@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ namespace locadora
     {
         public List<Movie> Movies { get; set; }
         public List<Client> Clients { get; set; }
+
 
         public UsersFunctions()
         {
@@ -75,7 +76,6 @@ namespace locadora
         }
         public void Rent()
         {
-            var functions = new ClientsFunctions();
             if (Movies.Any())
             {
                 var moviesToRent = Movies.Where(x => x.QuantityAvailable >= 1);
@@ -94,17 +94,18 @@ namespace locadora
                             item.QuantityAvailable--;
                         }
                         Console.WriteLine("Você tem cógido de cliente? (S)Sim (N)Não");
-                        string receberCodigoCliente = Console.ReadLine();
+                        string receberCodigoCliente = Console.ReadLine().ToUpper();
 
                         if(receberCodigoCliente == "S")
                         {
-                            functions.FindClient();
-                            Console.WriteLine("Filme alugado");
+                            FindClients();
+                            
                         }
 
                         else if(receberCodigoCliente == "N")
                         {
-                            functions.AddClients();
+                            AddClients();
+
                         }
                     }
                     else
@@ -149,14 +150,14 @@ namespace locadora
                 Console.WriteLine("Não há filmes disponíveis para alugar");
             }
         }
-        public void SearchClients()
+        public void FindClients()
         {
             if (Clients.Any())
             {
-                Console.WriteLine("Pesquise: ");
+                Console.WriteLine("Digite seu código: ");
                 var str = Console.ReadLine();
                 str = str.First().ToString().ToUpper() + str.Substring(1);
-                var pesquisas = Clients.Where(x => x.IdClient.ToString() == str || x.Name == str).ToList();
+                var pesquisas = Clients.Where(x => x.IdClient.ToString() == str).ToList();
                 Console.Clear();
 
                 if (pesquisas != null && pesquisas.Any())
@@ -173,7 +174,7 @@ namespace locadora
             }
             else
             {
-                Console.WriteLine("Não há filmes disponíveis para alugar");
+                Console.WriteLine("Não há clientes cadastrados");
             }
         }
         public void ReturnMovie()
@@ -266,6 +267,22 @@ namespace locadora
             {
                 Console.WriteLine("Nenhum filme foi cadastrado");
             }
+        }
+
+        public void AddClients()
+        {
+            var validators = new ClientValidators();
+            var client = new Client();
+            Console.WriteLine("Digite o seu nome para proseguir: ");
+            validators.InputClientNameValidator(client);
+
+            var lastClient = Clients.LastOrDefault();
+            client.IdClient = lastClient is null ? 0 : lastClient.IdClient + 1;
+
+            Console.Clear();
+            Clients.Add(client);
+            Console.WriteLine($"Cliente adicionado! Seu código é: {client.IdClient}");
+
         }
     }
 }
