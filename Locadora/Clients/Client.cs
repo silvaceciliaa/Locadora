@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace locadora
 {
     public class Client
@@ -8,7 +8,7 @@ namespace locadora
 
         public string Name { get; set; }
 
-        public int MoviesRented { get; set; } = 0;
+        public int MoviesRented { get; set; }
 
         public double Debt { get; set; } = 0;
 
@@ -20,7 +20,6 @@ namespace locadora
             Console.WriteLine($"{MoviesRented} de 10 alugados");
             Console.WriteLine("\n");
         }
-        
     }
 }
 
